@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "cd3cd43c85e0c38d9788f24d180c81c033d9126d0f93b00858ce4473880a08b4"
+            "sha256": "f26fc18a61ef8b27162ef3d841ab42eb019d456b1849cb6252a8389987e08379"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -211,6 +211,13 @@
             ],
             "markers": "python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==2.4.7"
+        },
+        "pytesseract": {
+            "hashes": [
+                "sha256:4ecfc898d00a70fcc38d2bce729de1597c67e7bc5d2fa26094714c9f5b573645"
+            ],
+            "index": "pypi",
+            "version": "==0.3.7"
         },
         "python-dateutil": {
             "hashes": [

@@ -9,6 +9,7 @@ numpy = "*"
 torch = "*"
 opencv-python = "*"
 matplotlib = "*"
+pytesseract = "*"
 
 [dev-packages]
 autopep8 = "*"
