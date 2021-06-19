@@ -11,8 +11,9 @@ class Net(nn.Module):
         self.conv3 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
         self.conv4 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
         self.conv5 = nn.Conv2d(128, 256, kernel_size=3, padding=1)
+        self.conv6 = nn.Conv2d(256, 512, kernel_size=3, padding=1)
         # linear layers
-        self.fc1 = nn.Linear(15360, 2000)
+        self.fc1 = nn.Linear(7680, 2000)
         self.fc2 = nn.Linear(2000, 500)
         self.fc3 = nn.Linear(500, 100)
         self.fc4 = nn.Linear(100, 8)
@@ -28,8 +29,9 @@ class Net(nn.Module):
         x = self.pool(F.relu(self.conv3(x)))
         x = self.pool(F.relu(self.conv4(x)))
         x = self.pool(F.relu(self.conv5(x)))
+        x = self.pool(F.relu(self.conv6(x)))
         # flattening the image
-        x = x.view(-1,  256*6*10)
+        x = x.view(-1,  512*3*5)
         # linear layers
         x = self.dropout(F.relu(self.fc1(x)))
         x = self.dropout(F.relu(self.fc2(x)))

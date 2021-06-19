@@ -65,8 +65,7 @@ def main():
     for batch_index, (data, target) in enumerate(train_loader):
         target = target.detach().numpy()[0]
         output = model(data)
-        m = torch.nn.LogSoftmax()
-        output = m(output).detach().numpy()
+        output = output.detach().numpy()
         classified = np.argmax(output)
         print(f'era {classes[target]} y predijo {classes[classified]}')
 

@@ -7,6 +7,7 @@ import cv2 as cv
 from PIL import Image
 import torchvision.transforms.functional as TF
 
+
 class ToTensor(object):
 
     def __call__(self, sample):
@@ -19,7 +20,7 @@ class BilletesDataset(Dataset):
 
     def prepareImage(self, path, x1, y1, x2, y2):
         img = cv.imread(path)
-        img = cv.cvtColor(img,cv.COLOR_BGR2RGB)
+        img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
         (h, w) = img.shape[:2]
         while h > w:
             img = np.rot90(img)
@@ -27,7 +28,7 @@ class BilletesDataset(Dataset):
 
         img = img[int(y1):int(y2), int(x1):int(x2)]
         resized = cv.resize(img, (320, 192))
-        pil_img = Image.fromarray(resized)  
+        pil_img = Image.fromarray(resized)
         return os.path.basename(path), pil_img
 
     def __init__(self, csv_file, root_dir, etiquetas, transform=None):
@@ -65,5 +66,9 @@ class BilletesDataset(Dataset):
         name, image = self.prepareImage(img_name, x1, y1, x2, y2)
 
         img_tensor = TF.to_tensor(image)
-        img_tensor = TF.normalize(img_tensor, [0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        return img_tensor, self.classes.index(self.etiquetas[name]['denominacion'])
+        img_tensor = TF.normalize(
+            img_tensor, [0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        if self.etiquetas != {}:
+            return img_tensor, torch.tensor(self.classes.index(self.etiquetas[name]['denominacion']))
+        else:
+            return img_tensor, img_name

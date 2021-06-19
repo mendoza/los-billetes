@@ -12,7 +12,6 @@ import numpy as np
 from torch.utils.data.sampler import SubsetRandomSampler
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.tensorboard import SummaryWriter
 
 
 def argumentExist():
@@ -32,9 +31,9 @@ def main():
     in_features, in_etiquetas, out_classifier = argumentExist()
     etiquetas = json.load(open(in_etiquetas, 'r'))
 
-    num_workers = 4
-    batch_size = 16
-    valid_size = 0.2  # Data augmentation for train data + conversion to tensor
+    num_workers = 0
+    batch_size = 36
+    valid_size = 0.02  # Data augmentation for train data + conversion to tensor
 
     train_data = BilletesDataset(
         csv_file=in_features, root_dir='', etiquetas=etiquetas)
@@ -53,7 +52,7 @@ def main():
 
     # Creating data loaders
     train_loader = torch.utils.data.DataLoader(
-        train_data, batch_size=batch_size, sampler=train_sampler, num_workers=num_workers)
+        train_data, batch_size=batch_size, num_workers=num_workers)
 
     valid_loader = torch.utils.data.DataLoader(
         train_data, batch_size=batch_size, sampler=valid_sampler, num_workers=num_workers)
@@ -70,11 +69,9 @@ def main():
     criterion = nn.CrossEntropyLoss()
 
     # optimizer
-    optimizer = optim.SGD(model.parameters(), lr=0.1)
-    scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
-
+    optimizer = optim.SGD(model.parameters(), lr=0.01)
     # epochs to train for
-    epochs = 1000
+    epochs = 25
 
     # tracks validation loss change after each epoch
     minimum_validation_loss = np.inf
@@ -100,11 +97,10 @@ def main():
             loss = criterion(output, target)
             valid_loss += loss.item()*data.size(0)
 
-        curr_lr = optimizer.param_groups[0]['lr']
-        print(f'Epoch {epoch}\t Training Loss: {train_loss/len(train_loader)}\t Validation Loss:{valid_loss/len(valid_loader)}\t LR:{curr_lr}')
-        scheduler.step()
+        print(
+            f'Epoch {epoch}\t Training Loss: {train_loss/len(train_loader)}\t Validation Loss:{valid_loss/len(valid_loader)}')
         # Saving model every time validation loss decreases
-        if valid_loss <= minimum_validation_loss and epoch % 10 == True:
+        if valid_loss <= minimum_validation_loss:
             print(
                 f'Validation loss decreased from {round(minimum_validation_loss, 6)} to {round(valid_loss, 6)}')
             torch.save(model.state_dict(), 'trained_model.pt')
