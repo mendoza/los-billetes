@@ -10,6 +10,8 @@ torch = "*"
 opencv-python = "*"
 matplotlib = "*"
 pytesseract = "*"
+torchvision = "*"
+pillow = "*"
 
 [dev-packages]
 autopep8 = "*"
